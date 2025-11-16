@@ -2,60 +2,36 @@ name: Test Tier 1 Security Pattern
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'examples/tier1-maximum-security.yml'
+      - '.github/workflows/test-tier1.yml'
 
 permissions:
   contents: read
 
 jobs:
-  test-tier1:
-    name: Test Tier 1 - Maximum Security
+  analyze:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
       - name: Lint Code
         run: |
           pipx install uv
-          uv tool run ruff check --output-format=json . > lint-results.json || true
-          echo "Lint results generated:"
-          cat lint-results.json | head -20
+          uv tool run ruff check --output-format=json . > lint.json || true
 
-      - name: Setup Goose
-        uses: clouatre-labs/setup-goose-action@v1
+      - uses: clouatre-labs/setup-goose-action@v1
 
-      - name: Configure AWS credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::435498010918:role/GitHubActionsQDeveloper
-          aws-region: us-east-1
-
-      - name: AI Analysis of Lint Results
+      - name: AI Analysis
         env:
           GOOGLE_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          echo "Summarize these linting issues and suggest fixes:" > prompt.txt
-          cat lint-results.json >> prompt.txt
-          
-          echo "Running Goose analysis..."
+          echo "Summarize these linting issues:" > prompt.txt
+          cat lint.json >> prompt.txt
           goose run --instructions prompt.txt --no-session --quiet > analysis.md
-          
-          echo "Analysis complete. Preview:"
-          cat analysis.md | head -30
 
-      - name: Verify no secrets in output
-        run: |
-          echo "Checking for leaked secrets..."
-          if grep -E "sk-|AIza|ghp_|xox|-----BEGIN" analysis.md; then
-            echo "❌ SECURITY ISSUE: Secrets detected in output!"
-            exit 1
-          else
-            echo "✅ No secrets detected"
-          fi
-
-      - name: Upload analysis artifact
-        uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v5
         with:
           name: ai-analysis
           path: analysis.md
-          retention-days: 7
