@@ -9,19 +9,7 @@ GitHub Action to install and cache [Goose AI agent](https://github.com/block/goo
 
 **Available on the [GitHub Marketplace](https://github.com/marketplace/actions/setup-goose-cli)**
 
-## Versioning
-
-This action uses **independent versioning** from Goose itself.
-
-### Version Compatibility
-
-| Action Version | Default Goose Version | Release Date |
-|---------------|----------------------|--------------|
-| v1.0.3 | 1.14.0 | 2025-11-13 |
-| v1.0.1 | 1.14.0 | 2025-11-12 |
-| v1.0.0 | 1.12.1 | 2025-11-06 |
-
-### Recommended Usage
+## Usage
 
 ```yaml
 # Recommended: Get latest v1.x updates automatically
@@ -68,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Lint Code
         run: pipx run ruff check --output-format=json . > lint-results.json || true
