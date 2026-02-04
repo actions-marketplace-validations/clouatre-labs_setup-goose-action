@@ -13,7 +13,7 @@ inputs:
   version:
     description: 'Version of Goose to install. Examples: 1.19.1, 1.15.0. Defaults to latest stable if unset. Ignored when check-latest is true.'
     required: false
-    default: '1.19.1'
+    default: '1.22.2'
   check-latest:
     description: 'Fetch and install the absolute latest Goose release from GitHub. When true, the version input is ignored.'
     required: false
@@ -83,7 +83,7 @@ runs:
 
     - name: Cache Goose binary
       id: cache-goose
-      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
       with:
         path: ~/.local/bin/goose
         key: goose-${{ steps.resolve-version.outputs.version }}-${{ runner.os }}-${{ runner.arch }}
