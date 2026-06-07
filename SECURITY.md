@@ -17,16 +17,21 @@ Please include:
 
 ## Response Timeline
 
-- **Acknowledgment:** Within 48 hours
-- **Initial assessment:** Within 5 business days
-- **Fix timeline:** 7-14 days depending on severity
+| Severity | Acknowledgement | Remediation target |
+|----------|----------------|-------------------|
+| Critical / High | Within 48 hours | Within 14 days |
+| Medium / Low | Within 72 hours | Next regular release cycle |
+
+## Reporter Credit
+
+Reporters who disclose vulnerabilities responsibly will be credited in the release notes for the fixing release, unless they request anonymity.
 
 ## Supported Versions
 
 | Version | Supported |
 |---------|-----------|
-| v1.x    | ✅ Yes    |
-| < v1.0  | ❌ No     |
+| v1.x    | Yes       |
+| < v1.0  | No        |
 
 ## Scope
 
@@ -34,17 +39,28 @@ This policy covers **this GitHub Action only**.
 
 ### Out of Scope
 
-- **Goose CLI vulnerabilities** - Report to [block/goose security](https://github.com/block/goose/security)
+- **Goose CLI vulnerabilities** - Report to [aaif-goose/goose security](https://github.com/aaif-goose/goose/security)
 - **Workflow security patterns** - See [examples/](examples/) for defensive CI/CD architectures
 - **Prompt injection in AI workflows** - This is a known risk documented in the README. See [Security Patterns](README.md#security-patterns) for mitigation strategies.
 
 ## Security Features
 
 This action:
-- Downloads binaries only from official [block/goose releases](https://github.com/block/goose/releases)
+- OpenSSF Best Practices **Silver** certified — fewer than 1% of open source projects reach this level ([badge](https://www.bestpractices.dev/projects/11555))
+- Downloads binaries only from official [aaif-goose/goose releases](https://github.com/aaif-goose/goose/releases)
 - Uses GitHub Actions cache with version-specific keys
 - Requires minimal permissions (`contents: read`)
 - Does not store or transmit API keys (user-managed via secrets)
+- All commits to `main` are GPG-signed; required by branch protection rules
+
+## Branch Protection
+
+The `main` branch is protected by GitHub rulesets:
+
+- **Required Status Checks**: CI Result must pass before merging
+- **Signed Commits**: All commits must be GPG-signed
+- **No Force Push**: History cannot be rewritten on main
+- **No Deletion**: The main branch cannot be deleted
 
 ## Disclosure Policy
 
